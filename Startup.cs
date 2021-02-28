@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Homie_backend_test
@@ -21,13 +22,13 @@ namespace Homie_backend_test
         {
             Configuration = configuration;
         }
-
+HostingAbstractionsWebHostBuilderExtensions<z
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddDbContext<Models.HomieContext>(opt =>opt.UseSqlServer(Configuration.GetConnectionString("HomieContext")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSwaggerGen(swagger =>
