@@ -125,7 +125,8 @@ go
 
 CREATE TABLE Tenants
 ( 
-	TenantId             uniqueidentifier  NOT NULL ,
+	TenantId             uniqueidentifier  NOT NULL 
+		DEFAULT  NEWID(),
 	[Name]                varchar(100)  NOT NULL ,
 	Email                varchar(50)  NOT NULL ,
 	Phone                varchar(20)  NULL ,
@@ -223,7 +224,7 @@ go
 
 CREATE TABLE Partners
 ( 
-	PartnerId            uniqueidentifier  NOT NULL ,
+	PartnerId            uniqueidentifier  NOT NULL DEFAULT  NEWID(),
 	[Partner]              varchar(100)  NOT NULL ,
 	[User]                varchar(100)  NOT NULL ,
 	[Password]             varchar(100)  NOT NULL ,
@@ -261,4 +262,19 @@ INSERT INTO [dbo].[Status]
 GO
 
 -- Create Procedures
+
+-- testing Partners
+
+INSERT INTO [dbo].[Partners]
+           ([Partner]
+           ,[User]
+           ,[Password]
+           )
+     VALUES
+           (
+		   			'inmuebles24'
+           ,'inmuebles24'
+           ,'1rodbtbo7IYO3bURrVJsYGWEjxoZskeZ' -- inmuebles24-12345
+           )
+GO
 
