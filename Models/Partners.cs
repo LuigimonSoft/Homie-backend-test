@@ -15,7 +15,14 @@ namespace Homie_backend_test.Models
       public Guid PartnerId { get; set; }
       public string Partner { get; set; }
       public string User { get; set; }
+
+      [NotMapped]
+      public string Token{ get; set; }
+
+      [Newtonsoft.Json.JsonIgnore]
       public string Password { get; set; }
+
+      [Newtonsoft.Json.JsonIgnore]
       public bool Active { get; set; }
   }
 }
