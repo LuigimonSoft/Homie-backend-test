@@ -17,5 +17,10 @@ namespace Homie_backend_test.Models
       public Guid? PropertyId { get; set; }
       public bool Active { get; set; }
       public DateTime CreatedOn { get; set; }
+
+      [Newtonsoft.Json.JsonIgnore]
+      public Owners Owner { get; set; }
+      [Newtonsoft.Json.JsonIgnore]
+        public Propertys Property { get; set; }
   }
 }

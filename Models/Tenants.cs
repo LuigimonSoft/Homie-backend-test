@@ -11,6 +11,11 @@ namespace Homie_backend_test.Models
   [Table(@"Tenants")]
   public class Tenants
   {
+    public Tenants()
+    {
+      Propertys = new HashSet<Propertys>();
+    }
+
       [Key]
       public Guid TenantId { get; set; }
       public string Name { get; set; }
@@ -18,5 +23,8 @@ namespace Homie_backend_test.Models
       public string Phone { get; set; }
       public DateTime AvailabilityFrom { get; set; }
       public DateTime AvailabilityTo { get; set; }
+
+      [Newtonsoft.Json.JsonIgnore]
+      public ICollection<Propertys> Propertys { get; set; }
   }
 }

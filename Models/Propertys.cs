@@ -11,40 +11,44 @@ namespace Homie_backend_test.Models
   [Table(@"Propertys")]
   public class Propertys
   {
-      private enum TypeStatus{
+      public  enum TypeStatus{
         published=1, 
         available, 
         deleted
       }
-      [Key]
-      public Guid PropertyId { get; set; }
-      public string Name { get; set; }
-      public string Description { get; set; }
-      public int RentalPriceId { get; set; }
-      public int StatusId { get; set; }
-      public Guid? TenantId { get; set; }
 
-      public string Status{
-        get{
-          switch(StatusId)
-          {
-            case (int)TypeStatus.published:
-              return "published";
-              break;
-            case (int)TypeStatus.available:
-              return "available";
-              break;
-            case (int)TypeStatus.deleted:
-              return "deleted";
-              break;
-            default:
-              return "Error";
-          }
+
+
+      public Propertys()
+        {
+            OwnersPropertys = new HashSet<OwnersPropertys>();
+            
         }
-      }
+
+        public Guid PropertyId { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public int? RentalPriceId { get; set; }
+        public int StatusId { get; set; }
+        public Guid? TenantId { get; set; }
+
+        public RentalPrices RentalPrice { get; set; }
+        public Status Status { get; set; }
+        public Tenants Tenant { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public ICollection<OwnersPropertys> OwnersPropertys { get; set; }
+
+
+      [Newtonsoft.Json.JsonIgnore]
       public Guid CreatedBy { get; set; }
+
+      [Newtonsoft.Json.JsonIgnore]
       public DateTime CreatedOn { get; set; }
+
+      [Newtonsoft.Json.JsonIgnore]
       public Guid? ModifiedBy { get; set; }
+
+      [Newtonsoft.Json.JsonIgnore]
       public DateTime? ModifiedOn { get; set; }
   }
 }

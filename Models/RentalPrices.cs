@@ -11,10 +11,21 @@ namespace Homie_backend_test.Models
   [Table(@"RentalPrices")]
   public class RentalPrices
   {
-    [Key]
+    public RentalPrices()
+        {
+            Propertys = new HashSet<Propertys>();
+        }
+
+    [Newtonsoft.Json.JsonIgnore]
     public int RentalPriceId { get; set; }
     public decimal RentalPrice { get; set; }
+
+    [Newtonsoft.Json.JsonIgnore]
     public bool Active { get; set; }
+    [Newtonsoft.Json.JsonIgnore]
     public DateTime CreatedOn { get; set; }
+
+      [Newtonsoft.Json.JsonIgnore]
+      public ICollection<Propertys> Propertys { get; set; }
   } 
 }

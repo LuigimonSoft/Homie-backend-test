@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 
 namespace Homie_backend_test
@@ -34,6 +36,13 @@ namespace Homie_backend_test
             services.AddSwaggerGen(swagger =>
             {
                 var contact = new Swashbuckle.AspNetCore.Swagger.Contact { Name = SwaggerConfiguration.ContactName, Url =  SwaggerConfiguration.ContactUrl };
+                swagger.AddSecurityDefinition("Bearer", new Swashbuckle.AspNetCore.Swagger.ApiKeyScheme { 
+                    In = "header",
+                    Description = "Please enter into field the word 'Bearer' following by space and JWT", 
+                    Name = "Authorization", Type = "apiKey" });
+              
+                
+
                 swagger.SwaggerDoc(SwaggerConfiguration.DocNameV1,
                                    new Swashbuckle.AspNetCore.Swagger.Info 
                                    {
@@ -45,7 +54,26 @@ namespace Homie_backend_test
                                     );
             });
 
+            var key = System.Text.Encoding.ASCII.GetBytes(Encrypt.GenKey(50));
+
+            services.AddAuthentication()
+            .AddJwtBearer(x =>
+             {
+                 x.RequireHttpsMetadata = false;
+                 x.SaveToken = true;
+                 x.TokenValidationParameters = new TokenValidationParameters
+                 {
+                     ValidateIssuerSigningKey = true,
+                     IssuerSigningKey = new SymmetricSecurityKey(key),
+                     ValidateIssuer = false,
+                     ValidateAudience = false,
+                     ClockSkew = TimeSpan.Zero
+                 };
+
+             }
+            );
             
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

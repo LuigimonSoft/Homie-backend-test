@@ -11,8 +11,15 @@ namespace Homie_backend_test.Models
   [Table(@"Status")]
   public class Status
   {
-      [Key]
+      public Status()
+        {
+            Propertys = new HashSet<Propertys>();
+        }
+      
       public int StatusId { get; set; }
       public string StatusText { get; set; }
+  
+      [Newtonsoft.Json.JsonIgnore]
+      public ICollection<Propertys> Propertys { get; set; }
   }
 }
