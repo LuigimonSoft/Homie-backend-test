@@ -24,5 +24,10 @@ namespace Homie_backend_test.Models
 
       [Newtonsoft.Json.JsonIgnore]
       public bool Active { get; set; }
+
+      [Newtonsoft.Json.JsonIgnore]
+      public int? PartnerTypeId { get; set; }
+
+      public PartnerTypes PartnerType { get; set; }
   }
 }

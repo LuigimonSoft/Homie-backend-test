@@ -21,6 +21,7 @@ namespace Homie_backend_test.Models
         public virtual DbSet<RentalPrices> RentalPrices { get; set; }
         public virtual DbSet<Status> Status { get; set; }
         public virtual DbSet<Tenants> Tenants { get; set; }
+        public virtual DbSet<PartnerTypes> PartnerTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -82,6 +83,9 @@ namespace Homie_backend_test.Models
             {
                 entity.HasKey(e => e.PartnerId);
 
+                entity.HasIndex(e => e.PartnerTypeId)
+                    .HasName("XIF1Partners");
+
                 entity.Property(e => e.PartnerId).ValueGeneratedNever();
 
                 entity.Property(e => e.Partner)
@@ -98,14 +102,26 @@ namespace Homie_backend_test.Models
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.PartnerType)
+                    .WithMany(p => p.Partners)
+                    .HasForeignKey(d => d.PartnerTypeId)
+                    .HasConstraintName("R_6");
+            });
+
+            modelBuilder.Entity<PartnerTypes>(entity =>
+            {
+                entity.HasKey(e => e.PartnerTypeId);
+
+                entity.Property(e => e.PartnerType)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Propertys>(entity =>
             {
                 entity.HasKey(e => e.PropertyId);
-
-                entity.HasIndex(e => e.RentalPriceId)
-                    .HasName("XIF1Propertys");
 
                 entity.HasIndex(e => e.StatusId)
                     .HasName("XIF2Propertys");
@@ -129,11 +145,6 @@ namespace Homie_backend_test.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.RentalPrice)
-                    .WithMany(p => p.Propertys)
-                    .HasForeignKey(d => d.RentalPriceId)
-                    .HasConstraintName("R_1");
-
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Propertys)
                     .HasForeignKey(d => d.StatusId)
@@ -150,9 +161,18 @@ namespace Homie_backend_test.Models
             {
                 entity.HasKey(e => e.RentalPriceId);
 
+                entity.HasIndex(e => e.PropertyId)
+                    .HasName("XIF1RentalPrices");
+
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
                 entity.Property(e => e.RentalPrice).HasColumnType("numeric(18, 2)");
+
+                entity.HasOne(d => d.Property)
+                    .WithMany(p => p.RentalPrices)
+                    .HasForeignKey(d => d.PropertyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("R_7");
             });
 
             modelBuilder.Entity<Status>(entity =>

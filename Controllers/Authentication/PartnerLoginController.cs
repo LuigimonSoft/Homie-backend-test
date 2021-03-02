@@ -10,6 +10,7 @@ using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 
 namespace Homie_backend_test.Controllers
 {
@@ -38,7 +39,7 @@ namespace Homie_backend_test.Controllers
       {
         string HomieKey=Encrypt.GenKey(50);
         UserLogin.password = Encrypt.EncryptText(UserLogin.password, HomieKey);
-        Models.Partners partner = _context.Partners.SingleOrDefault(partnercondition => partnercondition.User == UserLogin.user && partnercondition.Password == UserLogin.password && partnercondition.Active == true);
+        Models.Partners partner = _context.Partners.Where(partnercondition => partnercondition.User == UserLogin.user && partnercondition.Password == UserLogin.password && partnercondition.Active == true).Include(x=> x.PartnerType).SingleOrDefault<Models.Partners>();
         if (partner != null)
         {
           var tokenHandler = new JwtSecurityTokenHandler();
@@ -47,7 +48,7 @@ namespace Homie_backend_test.Controllers
 
           SecurityTokenDescriptor tokenDescriptor = null;
 
-          string TipoUsuario = "Partner";
+          string TipoUsuario = partner.PartnerType.PartnerType.Replace(" ","");
 
           tokenDescriptor = new SecurityTokenDescriptor
           {

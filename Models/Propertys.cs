@@ -21,19 +21,19 @@ namespace Homie_backend_test.Models
 
       public Propertys()
         {
-            OwnersPropertys = new HashSet<OwnersPropertys>();
+          OwnersPropertys = new HashSet<OwnersPropertys>();
+          RentalPrices = new HashSet<RentalPrices>();
             
         }
 
         public Guid PropertyId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public int? RentalPriceId { get; set; }
         public int StatusId { get; set; }
         public Guid? TenantId { get; set; }
 
         [Newtonsoft.Json.JsonProperty(NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public RentalPrices RentalPrice { get; set; }
+        public ICollection<RentalPrices> RentalPrices { get; set; }
 
         [Newtonsoft.Json.JsonProperty(NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Status Status { get; set; }

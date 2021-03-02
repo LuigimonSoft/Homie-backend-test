@@ -169,7 +169,7 @@ GO
 CREATE TABLE Owners
 ( 
 	OwnerId              varchar(20)  NOT NULL ,
-	Name                 varchar(100)  NOT NULL ,
+	[Name]                 varchar(100)  NOT NULL ,
 	AvailabilityFrom     datetime  NOT NULL ,
 	AvailabilityTo       datetime  NOT NULL ,
 	Email                varchar(100)  NULL ,
@@ -195,7 +195,7 @@ CREATE TABLE Tenants
 	TenantId             uniqueidentifier  NOT NULL 
 	CONSTRAINT GUID_1811012331
 		 DEFAULT  NEWID(),
-	Name                 varchar(100)  NOT NULL ,
+	[Name]                 varchar(100)  NOT NULL ,
 	Email                varchar(50)  NOT NULL ,
 	Phone                varchar(20)  NULL ,
 	AvailabilityFrom     datetime  NOT NULL ,
@@ -211,8 +211,8 @@ CREATE TABLE Propertys
 	PropertyId           uniqueidentifier  NOT NULL 
 	CONSTRAINT GUID_359148913
 		 DEFAULT  NEWID(),
-	Name                 varchar(100)  NOT NULL ,
-	Description          varchar(500)  NOT NULL ,
+	[Name]                 varchar(100)  NOT NULL ,
+	[Description]          varchar(500)  NOT NULL ,
 	StatusId             integer  NOT NULL ,
 	TenantId             uniqueidentifier  NULL ,
 	CreatedBy            uniqueidentifier  NOT NULL ,
@@ -280,12 +280,12 @@ go
 
 
 
-CREATE TABLE PartherTypes
+CREATE TABLE PartnerTypes
 ( 
-	PatherTypeId         integer IDENTITY ( 1,1 ) ,
-	PatherType           varchar(50)  NOT NULL ,
-	Active               bit  NOT NULL ,
-	CONSTRAINT XPKPartherTypes PRIMARY KEY  CLUSTERED (PatherTypeId ASC)
+	PartnerTypeId         integer IDENTITY ( 1,1 ) ,
+	PartnerType           varchar(50)  NOT NULL ,
+	Active               bit  NOT NULL DEFAULT 1 ,
+	CONSTRAINT XPKPartherTypes PRIMARY KEY  CLUSTERED (PartnerTypeId ASC)
 )
 go
 
@@ -293,16 +293,16 @@ go
 
 CREATE TABLE Partners
 ( 
-	PartnerId            uniqueidentifier  NOT NULL ,
-	Partner              varchar(100)  NOT NULL ,
-	User                 varchar(100)  NOT NULL ,
-	Password             varchar(100)  NOT NULL ,
-	PatherTypeId         integer  NULL ,
+	PartnerId            uniqueidentifier  NOT NULL DEFAULT NEWID() ,
+	[Partner]              varchar(100)  NOT NULL ,
+	[User]                 varchar(100)  NOT NULL ,
+	[Password]             varchar(100)  NOT NULL ,
+	PartnerTypeId         integer  NULL ,
 	Active               bit  NOT NULL 
 	CONSTRAINT True_1379669004
 		 DEFAULT  1,
 	CONSTRAINT XPKPartners PRIMARY KEY  CLUSTERED (PartnerId ASC),
-	CONSTRAINT R_6 FOREIGN KEY (PatherTypeId) REFERENCES PartherTypes(PatherTypeId)
+	CONSTRAINT R_6 FOREIGN KEY (PartnerTypeId) REFERENCES PartnerTypes(PartnerTypeId)
 )
 go
 
@@ -310,7 +310,7 @@ go
 
 CREATE NONCLUSTERED INDEX XIF1Partners ON Partners
 ( 
-	PatherTypeId          ASC
+	PartnerTypeId          ASC
 )
 go
 
@@ -372,16 +372,43 @@ GO
 
 -- testing Partners
 
+INSERT INTO [dbo].[PartnerTypes]
+           ([PartnerType]
+           )
+     VALUES
+			(
+				'Partner basic'
+			)
+INSERT INTO [dbo].[PartnerTypes]
+           ([PartnerType]
+           )
+     VALUES
+			(
+				'Partner '
+			)
+INSERT INTO [dbo].[PartnerTypes]
+           ([PartnerType]
+           )
+     VALUES
+			(
+				'Partner full'
+			)
+
+
 INSERT INTO [dbo].[Partners]
            ([Partner]
            ,[User]
            ,[Password]
+		   ,PartnerTypeId
            )
      VALUES
            (
-		   			'inmuebles24'
+		   'inmuebles24'
            ,'inmuebles24'
            ,'1rodbtbo7IYO3bURrVJsYGWEjxoZskeZ' -- inmuebles24-12345
+		   ,3
            )
 GO
+
+
 

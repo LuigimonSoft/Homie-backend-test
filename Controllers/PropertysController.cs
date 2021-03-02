@@ -12,7 +12,14 @@ using FluentValidation;
 namespace Homie_backend_test.Controllers
 {
 
-  [Authorize(AuthenticationSchemes = AuthSchemesAPI, Roles = "Partner")]
+   enum TypePartner{
+     Error=0,
+    PartnerBasic=1,
+    Partner=2,
+    PartnerFull=3
+
+  }
+  [Authorize(AuthenticationSchemes = AuthSchemesAPI, Roles = "Partner,Partnerfull,Partnerbasic")]
   [Route("propertys")]
   [ApiController]
 
@@ -33,7 +40,19 @@ namespace Homie_backend_test.Controllers
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<List<Models.Propertys>> PropertysPublished()
     {
-      List<Models.Propertys> _propertys = _context.Propertys.Where(propertycondition => propertycondition.StatusId == 1 && propertycondition.RentalPrice.Active == true).Include(x => x.Status).Include(x => x.RentalPrice).Include(x => x.Tenant).ToList();
+      List<Models.Propertys> _propertys=null;
+      switch(getTypePartner())
+      {
+        case TypePartner.PartnerFull:
+          _propertys = _context.Propertys.Include(x => x.Status).Include(x => x.RentalPrices).Include(x => x.Tenant).Where(propertycondition => propertycondition.StatusId == 1).ToList();
+          break;
+        case TypePartner.Partner:
+          _propertys = _context.Propertys.Where(propertycondition => propertycondition.StatusId == 1).Include(x => x.Status).Include(x => x.RentalPrices).ToList();
+          break;
+        case TypePartner.PartnerBasic:
+          _propertys = _context.Propertys.Where(propertycondition => propertycondition.StatusId == 1 ).Include(x => x.Status).ToList();
+          break;
+      }
       if (_propertys != null)
         return StatusCode(StatusCodes.Status200OK, _propertys);
       else
@@ -45,6 +64,8 @@ namespace Homie_backend_test.Controllers
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<Models.Propertys> CreateProperty(Models.Propertys property)
     {
+      property.CreatedBy = getPartner();
+      property.CreatedOn = System.DateTime.Now;
       Models.PropertysValidator validator = new Models.PropertysValidator();
       FluentValidation.Results.ValidationResult result = validator.Validate(property);
       if(result.IsValid){
@@ -109,9 +130,20 @@ namespace Homie_backend_test.Controllers
     public ActionResult<Models.Propertys> GetProperty(Guid propertyId)
     {
 
-      Models.Propertys _property = _context.Propertys.Where(propertycondition => propertycondition.StatusId == 1 && propertycondition.RentalPrice.Active == true && propertycondition.PropertyId == propertyId).Include(x => x.Status).Include(x => x.RentalPrice).Include(x => x.Tenant).FirstOrDefault<Models.Propertys>();
-      _property.ModifiedBy = getPartner();
-      _property.ModifiedOn = System.DateTime.Now;
+      Models.Propertys _property = null;
+      switch(getTypePartner())
+      {
+        case TypePartner.PartnerFull:
+          _property = _context.Propertys.Where(propertycondition => propertycondition.StatusId == 1 && propertycondition.PropertyId == propertyId).Include(x => x.Status).Include(x => x.RentalPrices).Include(x => x.Tenant).FirstOrDefault<Models.Propertys>();
+          break;
+        case TypePartner.Partner:
+          _property = _context.Propertys.Where(propertycondition => propertycondition.StatusId == 1 && propertycondition.PropertyId == propertyId).Include(x => x.Status).Include(x => x.RentalPrices).FirstOrDefault<Models.Propertys>();
+          break;
+        case TypePartner.PartnerBasic:
+          _property = _context.Propertys.Where(propertycondition => propertycondition.StatusId == 1 && propertycondition.PropertyId == propertyId).Include(x => x.Status).FirstOrDefault<Models.Propertys>();
+          break;
+      }
+      
       if (_property != null)
         return StatusCode(StatusCodes.Status200OK, _property);
       else
@@ -124,16 +156,26 @@ namespace Homie_backend_test.Controllers
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<Models.Propertys> DeleteProperty(Guid PropertyId)
     {
-
-      Models.Propertys _property = _context.Propertys.Where(propertycondition => propertycondition.StatusId == 1 && propertycondition.RentalPrice.Active == true && propertycondition.PropertyId == PropertyId).Include(x => x.Status).Include(x => x.RentalPrice).Include(x => x.Tenant).FirstOrDefault<Models.Propertys>();
-      if (_property != null)
+      Models.Propertys _property = null;
+      switch(getTypePartner())
+      {
+        case TypePartner.PartnerFull:
+          _property = _context.Propertys.Where(propertycondition => propertycondition.StatusId == 1 && propertycondition.PropertyId == propertyId).Include(x => x.Status).Include(x => x.RentalPrices).Include(x => x.Tenant).FirstOrDefault<Models.Propertys>();
+          break;
+        case TypePartner.Partner:
+          _property = _context.Propertys.Where(propertycondition => propertycondition.StatusId == 1 && propertycondition.PropertyId == propertyId).Include(x => x.Status).Include(x => x.RentalPrices).FirstOrDefault<Models.Propertys>();
+          break;
+        case TypePartner.PartnerBasic:
+          _property = _context.Propertys.Where(propertycondition => propertycondition.StatusId == 1 && propertycondition.PropertyId == propertyId).Include(x => x.Status).FirstOrDefault<Models.Propertys>();
+          break;
+      }if (_property != null)
       {
         _property.StatusId = (int)Models.Propertys.TypeStatus.deleted;
         _property.ModifiedBy = getPartner();
         _property.ModifiedOn = System.DateTime.Now;
         if (_context.SaveChanges() > 0)
         {
-          _property = _context.Propertys.Where(propertycondition =>   propertycondition.RentalPrice.Active == true && propertycondition.PropertyId == PropertyId).Include(x => x.Status).Include(x => x.RentalPrice).Include(x => x.Tenant).FirstOrDefault<Models.Propertys>();
+          _property = _context.Propertys.Where(propertycondition =>    propertycondition.PropertyId == PropertyId).Include(x => x.Status).Include(x => x.RentalPrices.Where(y=>y.Active)).Include(x => x.Tenant).FirstOrDefault<Models.Propertys>();
           return StatusCode(StatusCodes.Status200OK, _property);
         }
         else
@@ -154,6 +196,34 @@ namespace Homie_backend_test.Controllers
       }
       else
         return Guid.Empty;
+    }
+
+    private TypePartner getTypePartner()
+    {
+      if (this.User.Identities.FirstOrDefault().Name != null)
+      {
+        System.Security.Claims.ClaimsPrincipal currentUser = (System.Security.Claims.ClaimsPrincipal)this.User;
+        string role=currentUser.Claims.ElementAt(2).Value;
+        switch(role)
+        {
+          case "Partner":
+            return TypePartner.Partner;
+            break;
+          case "Partnerbasic":
+            return TypePartner.PartnerBasic;
+            break;
+            case "Partnerfull":
+            return TypePartner.PartnerFull;
+            break;
+          default:
+            return  TypePartner.Error;
+            break;
+        }
+
+
+      }
+      else
+        return TypePartner.Error;
     }
 
   }
