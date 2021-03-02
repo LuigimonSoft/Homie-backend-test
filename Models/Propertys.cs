@@ -32,9 +32,16 @@ namespace Homie_backend_test.Models
         public int StatusId { get; set; }
         public Guid? TenantId { get; set; }
 
+        [Newtonsoft.Json.JsonProperty(NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public RentalPrices RentalPrice { get; set; }
+
+        [Newtonsoft.Json.JsonProperty(NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Status Status { get; set; }
+
+        [Newtonsoft.Json.JsonProperty(NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Tenants Tenant { get; set; }
+
+        [Newtonsoft.Json.JsonProperty(NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonIgnore]
         public ICollection<OwnersPropertys> OwnersPropertys { get; set; }
 
