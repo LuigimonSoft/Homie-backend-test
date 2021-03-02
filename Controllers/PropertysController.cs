@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using FluentValidation;
 
 namespace Homie_backend_test.Controllers
 {
@@ -39,16 +40,66 @@ namespace Homie_backend_test.Controllers
         return NotFound();
     }
 
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public ActionResult<Models.Propertys> CreateProperty(Models.Propertys property)
+    {
+      Models.PropertysValidator validator = new Models.PropertysValidator();
+      FluentValidation.Results.ValidationResult result = validator.Validate(property);
+      if(result.IsValid){
+        _context.Propertys.Update(property);
+        if (_context.SaveChanges() > 0)
+          return StatusCode(StatusCodes.Status201Created, property);
+        else
+          return BadRequest();
+      }
+      else 
+      {
+        List<Models.Errors> listErrors= new List<Models.Errors>();
+        foreach(var failure in result.Errors) {
+          Models.Errors Error= new  Models.Errors();
+          Error.Error="Error in column " + failure.PropertyName + " failed validation";
+          Error.Details = "Error: " + failure.ErrorMessage;
+          listErrors.Add(Error);
+        }
+        return StatusCode(StatusCodes.Status400BadRequest, listErrors);
+      }
+    }
+
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<Models.Propertys> UpdateProperty(Models.Propertys property)
     {
-      _context.Propertys.Update(property);
-      if (_context.SaveChanges() > 0)
-        return StatusCode(StatusCodes.Status200OK, property);
-      else
-        return BadRequest();
+      Models.PropertysValidator validator = new Models.PropertysValidator();
+      FluentValidation.Results.ValidationResult result = validator.Validate(property);
+      if(result.IsValid && property.PropertyId!=Guid.Empty){
+        _context.Propertys.Update(property);
+        if (_context.SaveChanges() > 0)
+          return StatusCode(StatusCodes.Status200OK, property);
+        else
+          return BadRequest();
+      }
+      else 
+      {
+        List<Models.Errors> listErrors= new List<Models.Errors>();
+        if(property.PropertyId!=Guid.Empty)
+        {
+          Models.Errors Error= new  Models.Errors();
+          Error.Error="Error in column PropertyId failed validation";
+          Error.Details = "Error: the PropertyId is required" ;
+          listErrors.Add(Error);
+        }
+
+        foreach(var failure in result.Errors) {
+          Models.Errors Error= new  Models.Errors();
+          Error.Error="Error in column " + failure.PropertyName + " failed validation";
+          Error.Details = "Error: " + failure.ErrorMessage;
+          listErrors.Add(Error);
+        }
+        return StatusCode(StatusCodes.Status400BadRequest, listErrors);
+      }
     }
 
     [HttpGet("{PropertyId}")]
