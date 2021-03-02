@@ -13,6 +13,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.OpenApi.Models;
 
 
 namespace Homie_backend_test
@@ -35,16 +37,36 @@ namespace Homie_backend_test
 
             services.AddSwaggerGen(swagger =>
             {
-                var contact = new Swashbuckle.AspNetCore.Swagger.Contact { Name = SwaggerConfiguration.ContactName, Url =  SwaggerConfiguration.ContactUrl };
-                swagger.AddSecurityDefinition("Bearer", new Swashbuckle.AspNetCore.Swagger.ApiKeyScheme { 
-                    In = "header",
-                    Description = "Please enter into field the word 'Bearer' following by space and JWT", 
-                    Name = "Authorization", Type = "apiKey" });
-              
+                var contact = new OpenApiContact { Name = SwaggerConfiguration.ContactName, Url = new Uri(SwaggerConfiguration.ContactUrl) };
                 
+                var securityScheme = new OpenApiSecurityScheme
+                {
+                    Name = "JWT Authentication",
+                    Description = "Enter JWT Bearer token **_only_**",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer", // must be lower case
+                    BearerFormat = "JWT",
+                    Reference = new OpenApiReference
+                    {
+                        Id = JwtBearerDefaults.AuthenticationScheme,
+                        Type = ReferenceType.SecurityScheme
+                    }
+                };
+
+                swagger.AddSecurityDefinition("Bearer", /*new OpenApiSecurityScheme  { 
+                    In = ParameterLocation.Header,
+                    Description = "Please enter into field the word 'Bearer' following by space and JWT", 
+                    Name = "Authorization", 
+                    Type = SecuritySchemeType.ApiKey }*/ securityScheme);
+              
+                swagger.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+                {
+                    {securityScheme, new string[] { }}
+                });
 
                 swagger.SwaggerDoc(SwaggerConfiguration.DocNameV1,
-                                   new Swashbuckle.AspNetCore.Swagger.Info 
+                                   new Microsoft.OpenApi.Models.OpenApiInfo
                                    {
                                        Title = SwaggerConfiguration.DocInfoTitle,
                                        Version = SwaggerConfiguration.DocInfoVersion,
