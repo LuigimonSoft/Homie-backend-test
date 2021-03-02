@@ -160,13 +160,13 @@ namespace Homie_backend_test.Controllers
       switch(getTypePartner())
       {
         case TypePartner.PartnerFull:
-          _property = _context.Propertys.Where(propertycondition => propertycondition.StatusId == 1 && propertycondition.PropertyId == propertyId).Include(x => x.Status).Include(x => x.RentalPrices).Include(x => x.Tenant).FirstOrDefault<Models.Propertys>();
+          _property = _context.Propertys.Where(propertycondition => propertycondition.StatusId == 1 && propertycondition.PropertyId == PropertyId).Include(x => x.Status).Include(x => x.RentalPrices).Include(x => x.Tenant).FirstOrDefault<Models.Propertys>();
           break;
         case TypePartner.Partner:
-          _property = _context.Propertys.Where(propertycondition => propertycondition.StatusId == 1 && propertycondition.PropertyId == propertyId).Include(x => x.Status).Include(x => x.RentalPrices).FirstOrDefault<Models.Propertys>();
+          _property = _context.Propertys.Where(propertycondition => propertycondition.StatusId == 1 && propertycondition.PropertyId == PropertyId).Include(x => x.Status).Include(x => x.RentalPrices).FirstOrDefault<Models.Propertys>();
           break;
         case TypePartner.PartnerBasic:
-          _property = _context.Propertys.Where(propertycondition => propertycondition.StatusId == 1 && propertycondition.PropertyId == propertyId).Include(x => x.Status).FirstOrDefault<Models.Propertys>();
+          _property = _context.Propertys.Where(propertycondition => propertycondition.StatusId == 1 && propertycondition.PropertyId == PropertyId).Include(x => x.Status).FirstOrDefault<Models.Propertys>();
           break;
       }if (_property != null)
       {
