@@ -59,3 +59,23 @@ en el mismo localhost podemos encontrar nuestro crud mediante los diferentes mé
 - PUT para actualizar la propiedad
 - DELETE para eliminar la propiedad 
 
+El método POST y PUT utilizan el siguiente tipo de estructura JSON para los datos
+
+{
+  "PropertyId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "Name": "string",
+  "Description": "string",
+  "StatusId": 1,
+  "TenantId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "RentalPrices": [
+    {
+      "RentalPrice": 0
+    }
+  ]
+}
+
+### Demo 
+
+- Demo de la api en http://ec2-3-15-226-45.us-east-2.compute.amazonaws.com/homie
+- Demo de la documentación http://ec2-3-15-226-45.us-east-2.compute.amazonaws.com/homie/documentation
+
