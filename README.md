@@ -9,7 +9,9 @@
 
 1. Descargar NetCore 2.1 de 
 2. Instalar NetCore 2.1 
-3. Ejecutar el script(CreateScript.sql) de creación de la base de datos de Homie
+3. Ejecutar el script(CreateScript.sql) de creación de la base de datos de Homie este te generará las tablas como están l modelo siguiente
+
+![modelo de datos](https://raw.githubusercontent.com/LuigimonSoft/Homie-backend-test/master/Documentation/DataModel/HomieModel.png)
 
 ### Ejecución 
 
