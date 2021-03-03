@@ -403,12 +403,43 @@ INSERT INTO [dbo].[Partners]
            )
      VALUES
            (
-		   'inmuebles24'
+		   			'inmuebles24'
            ,'inmuebles24'
            ,'1rodbtbo7IYO3bURrVJsYGWEjxoZskeZ' -- inmuebles24-12345
 		   ,3
            )
 GO
+
+INSERT INTO [dbo].[Partners]
+           ([Partner]
+           ,[User]
+           ,[Password]
+		   ,PartnerTypeId
+           )
+     VALUES
+           (
+		   			'Metros cubicos'
+           ,'metroscubicos'
+           ,'nHLWcufU5a8b3avpRKXrJZ4VhO9perdo' -- metroscubicos-12345
+		   		,2
+           )
+GO
+
+INSERT INTO [dbo].[Partners]
+           ([Partner]
+           ,[User]
+           ,[Password]
+		   ,PartnerTypeId
+           )
+     VALUES
+           (
+		   			'Segunda mano'
+           ,'segundamano'
+           ,'BShX6VXNTkRN62kgdO8aSKbFWDb0DHKk' -- segundamano-12345
+		   		,1
+           )
+GO
+
 
 
 
