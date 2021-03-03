@@ -26,7 +26,7 @@ dotnet run
 
 Con lo que la aplicación iniciará 
 
-Para ver más fácilmente el funcionamiento si nos dirigimos a http://localhost/documentation podremos encontrar una aplicación para probar la API 
+Para ver más fácilmente el funcionamiento nos podemos dirigir a http://localhost/documentation ahí podremos encontrar una aplicación para probar la API 
 
 
 ### Funcionamiento 
