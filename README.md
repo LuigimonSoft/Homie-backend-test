@@ -7,7 +7,7 @@
 
 ### Instalación 
 
-1. Descargar NetCore 2.1 de 
+1. Descargar NetCore 2.1 de https://dotnet.microsoft.com/download/dotnet/2.1
 2. Instalar NetCore 2.1 
 3. Ejecutar el script(CreateScript.sql) de creación de la base de datos de Homie que se encuentra en la carpeta Documentation/DataModel este generará las tablas como están en el modelo siguiente
 
@@ -63,6 +63,7 @@ en el mismo localhost podemos encontrar nuestro crud mediante los diferentes mé
 
 El método POST y PUT utilizan el siguiente tipo de estructura JSON para los datos
 
+```json
 {
   "PropertyId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "Name": "string",
@@ -75,6 +76,7 @@ El método POST y PUT utilizan el siguiente tipo de estructura JSON para los dat
     }
   ]
 }
+```
 
 ### Demo 
 
