@@ -31,7 +31,7 @@ Para ver más fácilmente el funcionamiento nos podemos dirigir a http://localho
 
 ### Funcionamiento 
 #### Obtener un token
-Primero como partner debemos logearnos con nuestro usuario y contraseña para obtener un token en formato JWT
+Primero como partner debemos logearnos con nuestro usuario y contraseña para obtener un token en formato JWT.
 
 
 El script de la base de datos agregó 3 partners de prueba con diferentes niveles de partner
